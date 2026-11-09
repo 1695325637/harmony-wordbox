@@ -1,0 +1,30 @@
+{
+  "name": "wordbox-harmony",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.0.0" },
+  "scripts": {
+    "test": "vitest run --no-file-parallelism --maxWorkers=1",
+    "test:parallel": "vitest run",
+    "test:unit": "vitest run tests/unit --no-file-parallelism --maxWorkers=1",
+    "test:integration": "vitest run tests/integration --no-file-parallelism --maxWorkers=1",
+    "test:coverage": "vitest run --coverage --no-file-parallelism --maxWorkers=1",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.preview.json",
+    "typecheck:core": "tsc --noEmit -p tsconfig.core.json",
+    "typecheck:preview": "tsc --noEmit -p tsconfig.preview.json",
+    "sync:core": "node scripts/sync-core.mjs",
+    "check:core-sync": "node scripts/check-core-sync.mjs",
+    "gen:manifest": "node scripts/gen-core-manifest.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9",
+    "@vitest/coverage-v8": "^2.1.9",
+    "vite": "^6.0.7"
+  }
+}

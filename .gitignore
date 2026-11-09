@@ -1,0 +1,44 @@
+# ---- 依赖 ----
+node_modules/
+oh_modules/
+.pnpm-store/
+
+# ---- 构建产物 ----
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# ---- 测试覆盖率产物（以 TEST_REPORT.md 为权威记录）----
+coverage/
+.nyc_output/
+
+# ---- 鸿蒙 DevEco / hvigor 构建缓存 ----
+harmony/.hvigor/
+harmony/.idea/
+harmony/build/
+harmony/entry/build/
+harmony/entry/.preview/
+harmony/local.properties
+harmony/**/oh_modules/
+
+# ---- Vite / Vitest 缓存 ----
+.vite/
+node_modules/.vite/
+
+# ---- 编辑器与系统文件 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*~
+
+# ---- 日志与临时文件 ----
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.tmp/
+tmp/

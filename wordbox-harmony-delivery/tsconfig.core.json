@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["core/src/**/*.ts"],
+  "exclude": ["node_modules", "harmony", "tests", "preview", "adapters", "scripts"]
+}

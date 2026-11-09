@@ -1,0 +1,31 @@
+# 统一换行符为 LF，避免 Windows 检出时产生无意义 diff
+* text=auto eol=lf
+
+# 明确按文本处理的源码与文档
+*.ts    text eol=lf
+*.ets   text eol=lf
+*.mjs   text eol=lf
+*.js    text eol=lf
+*.json  text eol=lf
+*.json5 text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.mermaid text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+
+# 二进制资源不做换行转换
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.hap   binary
+
+# 语言统计：镜像代码不计入主语言占比
+harmony/entry/src/main/ets/core/** linguist-generated=true
+core-manifest.json linguist-generated=true
