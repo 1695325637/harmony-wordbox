@@ -1,0 +1,16 @@
+{
+  "app": {
+    "bundleName": "com.wordbox.harmony",
+    "vendor": "wordbox",
+    "versionCode": 1000000,
+    "versionName": "1.0.0",
+    "icon": "$media:app_icon",
+    "label": "$string:app_name",
+    "minAPIVersion": 12,
+    "targetAPIVersion": 12,
+    "debug": false,
+    "car": {
+      "minAPIVersion": 12
+    }
+  }
+}

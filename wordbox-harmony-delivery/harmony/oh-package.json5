@@ -1,0 +1,14 @@
+{
+  "modelVersion": "5.0.0",
+  "name": "wordbox-harmony",
+  "version": "1.0.0",
+  "description": "WordBox — 旅行情景英语单词盒子（三轨共享纯 TS 内核）",
+  "main": "",
+  "author": "wordbox",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@ohos/hypium": "1.0.19",
+    "@ohos/hamock": "1.0.0"
+  }
+}

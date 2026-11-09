@@ -1,0 +1,9 @@
+{
+  "string": [
+    { "name": "module_desc", "value": "单词盒子主模块" },
+    { "name": "EntryAbility_desc", "value": "旅行情景英语学习入口" },
+    { "name": "EntryAbility_label", "value": "单词盒子" },
+    { "name": "permission_internet_reason", "value": "仅用于华为账号授权登录与令牌刷新；学习内容与端侧推理不联网" },
+    { "name": "permission_vibrate_reason", "value": "打卡成功时可选轻振动反馈" }
+  ]
+}

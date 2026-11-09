@@ -1,0 +1,9 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "WordBox entry module — 仅依赖内核镜像，无第三方运行时依赖",
+  "main": "",
+  "author": "wordbox",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}

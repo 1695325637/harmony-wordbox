@@ -1,0 +1,10 @@
+{
+  "src": [
+    "pages/HomeScreen",
+    "pages/ChatScreen",
+    "pages/VocabularyScreen",
+    "pages/CalendarScreen",
+    "pages/StatsScreen",
+    "pages/AccountScreen"
+  ]
+}
