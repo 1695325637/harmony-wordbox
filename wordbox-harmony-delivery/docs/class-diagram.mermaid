@@ -1,0 +1,209 @@
+%% 单词盒子 WordBox — 类图抽取件
+%% 源：ARCHITECTURE.md §9.1；完整 TS 签名见 §5 与 TASK_BREAKDOWN.md §4
+classDiagram
+    direction TB
+    class Word {
+        +string id
+        +string text
+        +string meaningZh
+        +Scene scene
+        +string locale
+        +string exampleInScene
+        +string aiRolePrompt
+        +string createdAtYMD
+    }
+    class StudyRecord {
+        +string wordId
+        +number ef
+        +number repetitions
+        +number intervalDays
+        +string dueYMD
+        +string lastReviewedYMD
+        +WordStatus status
+        +number lapses
+        +string updatedAtYMD
+    }
+    class CheckIn {
+        +string dateYMD
+        +number activeSeconds
+        +number goalSeconds
+        +boolean checkedIn
+        +number streakAfter
+    }
+    class ChatMessage {
+        +string id
+        +ChatRole role
+        +string content
+        +number quality
+        +boolean degraded
+    }
+    class StatsSummary {
+        +StatsWindow windowDays
+        +number masteredWords
+        +number currentStreak
+        +number longestStreak
+        +number totalActiveSeconds
+    }
+    class AccountSession {
+        +SessionKind kind
+        +string uid
+        +string partition
+    }
+    class GuestPromptState {
+        +string firstStudyYMD
+        +boolean neverPrompt
+        +string lastPromptDate
+    }
+    class GuestSnapshot {
+        +DateWindow window
+        +Word[] words
+        +StudyRecord[] records
+        +CheckIn[] checkIns
+    }
+    class MergeResult {
+        +boolean performed
+        +MergeSkipReason reason
+        +number skippedOutsideWindowCount
+        +boolean idempotentHit
+    }
+    class Settings {
+        +number dailyGoalSeconds
+        +number newWordsPerDay
+        +boolean restDayEnabled
+    }
+
+    class Clock {
+        <<interface>>
+        +nowMs() number
+        +todayYMD() string
+    }
+    class StorageService {
+        <<interface>>
+        +get(key) Result
+        +batchSet(entries) Result
+    }
+    class AIService {
+        <<interface>>
+        +isReady() Result
+        +generate(ctx) Result
+    }
+    class InferenceEngine {
+        <<interface>>
+        +probeAccelerator() AcceleratorKind
+        +infer(prompt, timeoutMs) Result
+    }
+    class AccountProvider {
+        <<interface>>
+        +signIn() Result
+        +signOut() Result
+    }
+    class EbbinghausScheduler {
+        <<interface>>
+        +createRecord(wordId, todayYMD) StudyRecord
+        +review(record, quality, todayYMD) StudyRecord
+        +buildDailyQueue(words, records, todayYMD, cap) DailyQueue
+    }
+    class ScopedRepository {
+        <<interface>>
+        +partition(session) string
+        +loadGuestSnapshot(nowYMD) Result
+        +batchWrite(partition, entries) Result
+    }
+    class ProgressGate {
+        <<interface>>
+        +check(session) GateDecision
+        +guard(session, data) Gated
+    }
+    class CheckInService {
+        <<interface>>
+        +accumulate(dateYMD, delta, clock) Result
+        +rebuildStreak() Result
+    }
+    class StatsService {
+        <<interface>>
+        +summary(window, asOf, session) Result
+        +calendar(month, asOf, session) Result
+        +recomputeAfterMerge(uid, asOf) Result
+    }
+    class AccountService {
+        <<interface>>
+        +current() Result
+        +signIn(auth, clock) Result
+        +hasGuestProgress(nowYMD) Result
+    }
+    class GuestRetentionPolicy {
+        <<interface>>
+        +windowOf(nowYMD) DateWindow
+        +filterWithinWindow(items, nowYMD) DatedEntity
+        +pruneOutsideWindow(items, nowYMD) PruneResult
+    }
+    class RetentionService {
+        <<interface>>
+        +pruneGuestPartition(nowYMD) Result
+        +loadGuestSnapshot(nowYMD) Result
+    }
+    class LoginPromptPolicy {
+        <<interface>>
+        +shouldPromptLogin(input) LoginPromptDecision
+        +applyAction(state, action, todayYMD) GuestPromptState
+    }
+    class LoginPromptService {
+        <<interface>>
+        +decide(nowYMD) Result
+        +onAuthSucceeded(transition, nowYMD) Result
+    }
+    class ProgressMergeService {
+        <<interface>>
+        +mergeRecords(a, g) MergePlan
+        +mergeCheckIns(a, g) MergePlan
+        +computeIdempotencyKey(snapshot) string
+    }
+    class MigrationService {
+        <<interface>>
+        +detect(uid, nowYMD) Result
+        +recordDecision(uid, choice, nowYMD) Result
+        +merge(uid, nowYMD, clock) Result
+    }
+    class AIProviderRouter {
+        <<interface>>
+        +reply(ctx, clock) AIResponseEnvelope
+    }
+    class WordBoxApp {
+        <<interface>>
+        +bootstrap(clock) Result
+        +sendMessage(sessionId, text, clock) Result
+        +onHuaweiAuthResult(auth, clock) Result
+        +onMergeChoice(choice, clock) Result
+    }
+
+    Word "1" -- "1" StudyRecord : 调度状态
+    Word "*" -- "1" Scene : 归属
+    StudyRecord "1" -- "1" EbbinghausScheduler : review 输入输出
+    CheckIn "*" -- "1" CheckInService : 累计与打卡
+    StatsSummary "1" -- "1" StatsService : 门禁后返回
+    AccountSession "1" -- "1" AccountService : 会话态
+    AccountSession "1" -- "1" ProgressGate : 读取层门禁
+    AccountSession "1" -- "1" ScopedRepository : 分区依据
+    GuestPromptState "1" -- "1" LoginPromptPolicy : 状态机输入
+    GuestSnapshot "1" -- "1" GuestRetentionPolicy : 窗口过滤
+    GuestSnapshot "1" -- "1" RetentionService : 产出快照
+    GuestSnapshot "1" -- "1" MigrationService : 合并输入
+    MergeResult "1" -- "1" MigrationService : 输出
+    ScopedRepository "1" --> "1" StorageService : 依赖端口
+    ScopedRepository "1" --> "1" ProgressGate : 门禁
+    AIProviderRouter "1" --> "2" AIService : 编排主实现与兜底
+    AIService <|.. OnDeviceAI
+    AIService <|.. ScriptedAI
+    AIService <|.. MockAI
+    OnDeviceAI "1" --> "1" InferenceEngine : 注入端口
+    AccountService "1" --> "1" AccountProvider : 注入端口
+    WordBoxApp "1" --> "1" AIProviderRouter : 编排
+    WordBoxApp "1" --> "1" LoginPromptService : 类型A
+    WordBoxApp "1" --> "1" MigrationService : 类型B
+    WordBoxApp "1" --> "1" Clock : 注入
+    WordBoxApp "1" --> "1" RetentionService : 冷启动清理
+    MigrationService "1" --> "1" ProgressMergeService : 冲突裁决
+    MigrationService "1" --> "1" StatsService : 合并后重算
+    MigrationService "1" --> "1" CheckInService : 连续天数重算
+    LoginPromptService "1" --> "1" LoginPromptPolicy : 纯函数判定
+    RetentionService "1" --> "1" GuestRetentionPolicy : 纯函数判定

@@ -1,0 +1,184 @@
+%% 单词盒子 WordBox — 3 张核心时序图抽取件
+%% 源：ARCHITECTURE.md §8；与 TASK_BREAKDOWN.md §4 API Spec 逐字一致
+%% 本文件为多图集合，渲染时请按分隔注释逐段粘贴；下方每段均为独立可渲染 Mermaid 图。
+
+%% ========== 图 1：一次完整学习流程（ARCHITECTURE.md §8.1） ==========
+sequenceDiagram
+    autonumber
+    actor U as 旅客用户
+    participant APP as WordBoxApp
+    participant SCH as EbbinghausScheduler
+    participant R as AIProviderRouter
+    participant OD as OnDeviceAI
+    participant SA as ScriptedAI
+    participant QP as QualityTagParser
+    participant REPO as ScopedRepository
+    participant CI as CheckInService
+    participant ST as StatsService
+
+    U->>APP: bootstrap(clock)
+    APP->>REPO: pruneGuestPartition(todayYMD)
+    REPO-->>APP: PruneReport 幂等
+    APP-->>U: BootstrapResult 类型A判定 与 设置
+    U->>APP: startLearning(Scene.AIRPORT, clock)
+    APP->>SCH: buildDailyQueue(words, records, todayYMD, cap=8)
+    SCH-->>APP: DailyQueue 新词8 复习12
+    APP-->>U: 渲染 ChatScreen 与 10:00 倒计时
+    loop 对话回合 turnIndex 0 到 5 共至少 6 个 AI 回合
+        U->>APP: sendMessage(sessionId, userText, clock)
+        APP->>R: reply(ctx, clock)
+        R->>OD: generate(ctx)
+        alt 端侧推理成功
+            OD-->>R: AIReply 原始文本含 QUALITY 标签
+        else 失败或超时
+            OD-->>R: Result.fail AI 错误码
+            R->>SA: generate(ctx)
+            SA-->>R: AIReply degraded=true
+        end
+        R->>QP: parse(raw)
+        QP-->>R: ParsedAIReply displayText 与 quality
+        R-->>APP: AIResponseEnvelope
+        APP->>SCH: review(record, quality, todayYMD)
+        SCH-->>APP: 新 StudyRecord EF 间隔 dueYMD
+        APP->>REPO: saveRecord 与 saveChatMessage
+        REPO-->>APP: Result.ok true
+        APP-->>U: 展示 AI 回复 与 quality 反馈 与 长按取词
+    end
+    U->>APP: tickActiveSeconds(sessionId, 60, clock)
+    APP->>CI: accumulate(todayYMD, 60, clock)
+    CI-->>APP: CheckIn activeSeconds 累计
+    alt activeSeconds 达到 600 且当日未打卡
+        CI->>CI: checkedIn=true 且 streakAfter 加 1
+        CI->>REPO: saveCheckIn
+        CI->>ST: 触发 7 30 90 日统计增量刷新
+        ST-->>APP: StatsSummary
+    else 未达 600
+        CI-->>APP: remainingSeconds
+    end
+    APP-->>U: 首页刷新 队列 连续天数 本周打卡格
+    Note over U,ST: 端侧推理全程无网络请求；对话与学习数据零出端
+
+%% ========== 图 2：端侧推理失败 / 模型未就绪的离线降级（ARCHITECTURE.md §8.2） ==========
+sequenceDiagram
+    autonumber
+    participant APP as WordBoxApp
+    participant R as AIProviderRouter
+    participant OD as OnDeviceAI
+    participant ENG as InferenceEngine 鸿蒙实装
+    participant SA as ScriptedAI
+    participant DIAG as 本地诊断记录
+
+    APP->>R: reply(ctx, clock)
+    R->>OD: isReady()
+    OD->>ENG: probeAccelerator()
+    ENG-->>OD: NPU 或 CPU 或 UNAVAILABLE
+    alt 加速器不可用或模型未就绪
+        OD-->>R: Result.fail AI_MODEL_NOT_READY
+    else 可用
+        OD->>ENG: loadModel()
+        ENG-->>OD: Result.ok true
+        OD->>ENG: infer(prompt, 10000ms)
+        alt 首 token 超过 2000ms 或 总耗时超过 10000ms
+            ENG-->>OD: Result.fail 超时
+            OD-->>R: Result.fail AI_INFERENCE_TIMEOUT
+        else 推理内存超限
+            ENG-->>OD: Result.fail 内存超限
+            OD-->>R: Result.fail AI_OUT_OF_MEMORY
+        else 成功
+            ENG-->>OD: 原始文本
+            OD-->>R: AIReply provider=OnDevice
+        end
+    end
+    alt 主实现返回失败 且 attempts 小于等于 2
+        R->>R: 记录 errorChain 本地诊断
+        R->>SA: generate(ctx)
+        SA-->>R: AIReply provider=Scripted degraded=true
+        R->>DIAG: 持久化 errorChain 仅本地
+    end
+    R-->>APP: AIResponseEnvelope degraded 与 errorChain
+    APP-->>APP: quality 解析 调度回写 计时累计照常
+    Note over APP,SA: 降级不阻断 600s 计时与打卡闭环；降级在本内核完成，可纯逻辑单测
+
+%% ========== 图 3：游客登录 → 类型 A → 窗口过滤 → 合并 → 统计重算（ARCHITECTURE.md §8.3） ==========
+sequenceDiagram
+    autonumber
+    actor U as 旅客用户 游客态
+    participant APP as WordBoxApp
+    participant LPP as LoginPromptPolicy
+    participant RET as RetentionService
+    participant ACC as AccountService
+    participant HK as AccountProvider 华为账号
+    participant MIG as MigrationService
+    participant REPO as ScopedRepository
+    participant CI as CheckInService
+    participant ST as StatsService
+
+    Note over U,APP: 冷启动，FakeClock 可推进至 D5 / D6 / D7 / D8 及跨月
+    U->>APP: bootstrap(clock)
+    APP->>RET: pruneGuestPartition(todayYMD)
+    RET-->>APP: PruneReport 窗口 today-6 到 today 幂等
+    APP->>RET: hasGuestProgress(todayYMD)
+    RET-->>APP: true 与 窗口内 GuestSnapshot
+    APP->>LPP: shouldPromptLogin(input)
+    alt D1到D4 或 D6 或 已登录 或 空窗口 或 neverPrompt 或 当日已弹
+        LPP-->>APP: shouldPrompt=false 与 PromptSkipReason
+    else D5 或 D7 或 D8 及以后且当日未弹
+        LPP-->>APP: shouldPrompt=true dialogType=A 引导性摘要
+        APP-->>U: 弹出类型A 登录以保存学习进度
+        U->>APP: onLoginGuideAction(action, clock)
+        alt 去登录
+            APP->>APP: onShown 持久化 lastPromptDate
+            APP-->>U: launchAccountKit=true
+        else 暂不
+            APP-->>U: nextState lastPromptDate=today 次日按规则继续
+        else 不再提示
+            APP-->>U: neverPrompt=true 永久关闭类型A 不影响类型B
+        end
+    end
+    U->>HK: 华为账号授权 可能需要网络
+    HK-->>APP: AccountAuthResult 或 失败错误码
+    alt 授权失败或用户取消
+        APP->>ACC: 会话保持 guest
+        APP-->>U: 退回游客态 学习链路不中断
+    else 授权成功
+        APP->>ACC: signIn(auth, clock)
+        ACC-->>APP: AccountTransition guest 到 authenticated
+        APP->>MIG: detect(uid, todayYMD) 类型B判定
+        MIG->>MIG: hasDecision(uid) 且 choice 非 Defer
+        alt 无窗口内游客进度 或 已有明确决策
+            MIG-->>APP: shouldShow=false 与 MergeSkipReason
+        else 需用户选择
+            MIG-->>APP: shouldShow=true dialogType=B 与 摘要
+            APP-->>U: 弹出类型B 是否合并游客进度
+            U->>APP: onMergeChoice(choice, clock)
+            alt 取消 暂不处理
+                APP->>MIG: recordDecision Defer 不落盘
+                APP-->>U: 下次登录或我的页可再触发
+            else 不合并 保留账号已有进度
+                APP->>MIG: recordDecision KeepAccount 落盘
+                APP-->>U: 窗口内游客数据保留 不删除 不展示
+            else 合并进度
+                APP->>MIG: recordDecision Merge 落盘
+                APP->>MIG: merge(uid, todayYMD, clock)
+                MIG->>RET: loadGuestSnapshot(todayYMD)
+                RET-->>MIG: 仅窗口内 GuestSnapshot
+                MIG->>MIG: filterWithinWindow 与 pruneOutsideWindow
+                MIG->>MIG: computeIdempotencyKey(snapshot)
+                alt 幂等账本已存在该 key
+                    MIG-->>APP: MergeResult idempotentHit=true performed=false
+                else 首次合并
+                    MIG->>MIG: mergeWordLists mergeRecords mergeCheckIns 冲突裁决
+                    MIG->>REPO: batchWrite 到 user 分区 单次原子批次
+                    REPO-->>MIG: Result.ok true
+                    MIG->>REPO: 写 mergeLedger 幂等账本
+                    MIG->>CI: rebuildStreak()
+                    CI-->>MIG: StreakInfo current 与 longest
+                    MIG->>ST: recomputeAfterMerge(uid, todayYMD)
+                    ST-->>MIG: StatsSummary 7 30 90 日重算
+                    MIG-->>APP: MergeResult recomputed=true skippedOutsideWindowCount
+                end
+                APP-->>U: 首页 日历 统计立即刷新为合并结果
+            end
+        end
+    end
+    Note over U,ST: 窗口外数据不合并 不回灌 不计入统计重算；全流程本地完成 无云同步
