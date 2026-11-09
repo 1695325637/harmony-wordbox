@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "generator": "scripts/gen-core-manifest.mjs",
+  "algorithm": "sha256",
+  "sourceRoot": "core/src",
+  "mirrorRoot": "harmony/entry/src/main/ets/core",
+  "fileCount": 32,
+  "files": {
+    "core/src/adapters/memoryStorage.ts": {
+      "sha256": "136b7c663bbb990782747fad7add2b2f823493a7258b22dd7bac0948fe40840c",
+      "mirror": "harmony/entry/src/main/ets/core/adapters/memoryStorage.ets",
+      "mirrorSha256": "0c01f54ef9807ca9fc8d8f5e5aa1d4e6f4756ecc24de4ab789ad649ec98895f1",
+      "bytes": 2875
+    },
+    "core/src/adapters/systemClock.ts": {
+      "sha256": "373e607cfdade59eb4443208dfecf7c1ba3fbecc241e2eb90b1b89ca42441575",
+      "mirror": "harmony/entry/src/main/ets/core/adapters/systemClock.ets",
+      "mirrorSha256": "5cbfd2e82042e3293b02e851dbc8ad40c889029b4b68d2ae4898c778dc369c2c",
+      "bytes": 1096
+    },
+    "core/src/data/scriptTemplates.ts": {
+      "sha256": "4fdd2adb27d6d3640697db28abb5265852499a9fdb1ac618af929516883f2d80",
+      "mirror": "harmony/entry/src/main/ets/core/data/scriptTemplates.ets",
+      "mirrorSha256": "61d274d0b6efdcf77b40cf0c5278144a01e386e2c03a3728eca30f747365c76b",
+      "bytes": 6679
+    },
+    "core/src/data/seedWords.ts": {
+      "sha256": "076b7bcca7e96aee3a8b368d4469669a5b22a0d8fa779aa3fb662b52d1dc89eb",
+      "mirror": "harmony/entry/src/main/ets/core/data/seedWords.ets",
+      "mirrorSha256": "d1fd530a25a94c2815fb85e615295ec4da0a1dc5a503462800a7a2e6e7d4ecca",
+      "bytes": 19601
+    },
+    "core/src/index.ts": {
+      "sha256": "2fc1e5e1a399a06f8a43b038b32e39e5b9cf37a89f8374dd7c1b680f3e915919",
+      "mirror": "harmony/entry/src/main/ets/core/index.ets",
+      "mirrorSha256": "6db4686baa7828513cce361a2cb7c342a36e96986c75ed9a1ef98695d498e2ed",
+      "bytes": 8820
+    },
+    "core/src/models/constants.ts": {
+      "sha256": "42e8ab11abcaf9337a8d17752b99ad9fa3c0adb1abc340f0feeb2c35f02387c6",
+      "mirror": "harmony/entry/src/main/ets/core/models/constants.ets",
+      "mirrorSha256": "60df1ad1830b1dc1523a28aa868581ac15e1d9f8eeac4815192d7c692af9fecb",
+      "bytes": 4422
+    },
+    "core/src/models/errors.ts": {
+      "sha256": "d90fcc916e4a87091e305ff2da77b9972e3d5a3b41e2cfb584566c6ce3b8bfdb",
+      "mirror": "harmony/entry/src/main/ets/core/models/errors.ets",
+      "mirrorSha256": "81a54a1ed18cd73965e6d941a0958f6603f4bed57debc2d95bad5d93144d6602",
+      "bytes": 6338
+    },
+    "core/src/models/types.ts": {
+      "sha256": "5df2cacd6ccf08707d094d55c996e1845d1b7badb7c11a81c7da6c4fe6d0f5b4",
+      "mirror": "harmony/entry/src/main/ets/core/models/types.ets",
+      "mirrorSha256": "05591fa20141166263a291f62d6405995cb99cf9be5625e2aabde3ee1fca690d",
+      "bytes": 13473
+    },
+    "core/src/ports/codec.ts": {
+      "sha256": "e8d46c1e5c45fb5f14ee4456b7ce3187d0d524321337999ff399048902e38021",
+      "mirror": "harmony/entry/src/main/ets/core/ports/codec.ets",
+      "mirrorSha256": "e68983df98d20893bbea4f73d72da2c38310faa5d61bd7291a2dc0b5a756ce49",
+      "bytes": 4823
+    },
+    "core/src/ports/keys.ts": {
+      "sha256": "d40b80cafb5a1649891109cb4261771a55b2fd6cf7a2571efe67a3455b70aa48",
+      "mirror": "harmony/entry/src/main/ets/core/ports/keys.ets",
+      "mirrorSha256": "3ed3603ee5e8b16ee4a89a21a9fd77a61d391f3e2361a170d74065564f886503",
+      "bytes": 2164
+    },
+    "core/src/ports/ports.ts": {
+      "sha256": "1cccfcc88024852d56dbb94426edc9bc7de2115b714c96bc2596cdbd3f6c5adf",
+      "mirror": "harmony/entry/src/main/ets/core/ports/ports.ets",
+      "mirrorSha256": "676ca674f468f0aa1cebb5cc4af271074a03c6b5e8ac0375136f8606886db318",
+      "bytes": 2257
+    },
+    "core/src/services/account.ts": {
+      "sha256": "de05e41a5e905aee7f2fd23e88f98dbce464b0536b1b5477d43b7d8a24fa35c6",
+      "mirror": "harmony/entry/src/main/ets/core/services/account.ets",
+      "mirrorSha256": "84f1cc4b168b7b87a2adb8a27b674e5d25a86be9209923aded563700ca2451f0",
+      "bytes": 6108
+    },
+    "core/src/services/aiRouter.ts": {
+      "sha256": "4e0a02858e47c82bf72de32426b63d5325f1782c9abeb09c2fc0710f0abe728b",
+      "mirror": "harmony/entry/src/main/ets/core/services/aiRouter.ets",
+      "mirrorSha256": "3b0ecf151a85d28c98a382e301b82336975e34065757d656f0f9a61aac158ea3",
+      "bytes": 3885
+    },
+    "core/src/services/appFacade.ts": {
+      "sha256": "6f86636d54c0964a99776251d65bb4eb93b94ce1b86357b91400f3ad71a4e8c8",
+      "mirror": "harmony/entry/src/main/ets/core/services/appFacade.ets",
+      "mirrorSha256": "d8b1708dce4f43a9143243c76290605a74121e85dbb3d16346bffc668ae3b29a",
+      "bytes": 24142
+    },
+    "core/src/services/checkin.ts": {
+      "sha256": "c029bf0eb372544f2e613709405bd31817c3b3c5ff610001d1452e1182d0eaa1",
+      "mirror": "harmony/entry/src/main/ets/core/services/checkin.ets",
+      "mirrorSha256": "e04fff04bc18604f62526889547b9f00dbe266d51beb242ee8b85d440cab26b3",
+      "bytes": 7211
+    },
+    "core/src/services/loginPrompt.ts": {
+      "sha256": "31df18a41d92b5d548311e3d58c5bea3ca836c56ac5f124878fc9084b06b85a8",
+      "mirror": "harmony/entry/src/main/ets/core/services/loginPrompt.ets",
+      "mirrorSha256": "f96d7b0552300c37172fbe659d86b296627a9f7e31372c2f45e0b82f3fe25f53",
+      "bytes": 9781
+    },
+    "core/src/services/migration.ts": {
+      "sha256": "570fa429982b246ab26412d993e501973287c66466d97470d351fdcad0f215c0",
+      "mirror": "harmony/entry/src/main/ets/core/services/migration.ets",
+      "mirrorSha256": "d71dfef20d9eba2fe905bace36809e74f71aae49de489d6432b0b78f90571172",
+      "bytes": 22562
+    },
+    "core/src/services/mockAI.ts": {
+      "sha256": "13e892ac316a54ff48ab3754e5aad65832167c5de7e5c855de0d6fe03f02d825",
+      "mirror": "harmony/entry/src/main/ets/core/services/mockAI.ets",
+      "mirrorSha256": "7068b8bb5d3aa088ee3ae22342d1249aa888f13623c3b0eb5c1fd85b69c02480",
+      "bytes": 2810
+    },
+    "core/src/services/onDeviceAI.ts": {
+      "sha256": "5fdc8b7d5d326458cca427bfacbe968462ea1425e84fcb5bcbe91d7e94f5054b",
+      "mirror": "harmony/entry/src/main/ets/core/services/onDeviceAI.ets",
+      "mirrorSha256": "4023dc5c47853b0d82cacf73956bdc4b2ab03b5bac2c892930b7baf5aaffb691",
+      "bytes": 3511
+    },
+    "core/src/services/progressGate.ts": {
+      "sha256": "df7d7f56268d83abb329db478e510b31fe03c3e4e8b7c12c0067d2e1a982cd85",
+      "mirror": "harmony/entry/src/main/ets/core/services/progressGate.ets",
+      "mirrorSha256": "bfcf67af7ff3e324d909d7134060208148841bae2d8cded06235a6d11ab1bd7e",
+      "bytes": 1814
+    },
+    "core/src/services/prompt.ts": {
+      "sha256": "48abedd137f7c2a88dd90e27b9aa2e3217890323c6b7a715d8c08860e62bb4ba",
+      "mirror": "harmony/entry/src/main/ets/core/services/prompt.ets",
+      "mirrorSha256": "1db77d3fc7dc5dd238a2075bb5b5fff6e82638dbbbf669f2911739c507f61063",
+      "bytes": 2712
+    },
+    "core/src/services/quality.ts": {
+      "sha256": "5054de439f76a57602908c47cf2dfc514c4553af6c313b0867ef1dd2f9617f4d",
+      "mirror": "harmony/entry/src/main/ets/core/services/quality.ets",
+      "mirrorSha256": "a4073b9a3b1e3d9d3497a57491c1bc39148af060ce86d9ac91715ee7683318f4",
+      "bytes": 2558
+    },
+    "core/src/services/repository.ts": {
+      "sha256": "511ef1394d52e89ec0c708a2bab7db6fbfeb5d8cc03a2e600ef984c22113ba72",
+      "mirror": "harmony/entry/src/main/ets/core/services/repository.ets",
+      "mirrorSha256": "4cd0872021a9b0dd6e034f24c0c74d6a436ff25fc3d8bb8171364cffa5e289ce",
+      "bytes": 12945
+    },
+    "core/src/services/retention.ts": {
+      "sha256": "bc0170aa27f213886a0861e903162b021a4caab5f4d83f5d19aa665635479762",
+      "mirror": "harmony/entry/src/main/ets/core/services/retention.ets",
+      "mirrorSha256": "dd84b9834ff54576c93941612f1ead33c4e42dc99da019359d01da9f7dd177c5",
+      "bytes": 11411
+    },
+    "core/src/services/scene.ts": {
+      "sha256": "157f66073ed46399ceca02e522b57302d25819a462da0e052b4546c5d5a52238",
+      "mirror": "harmony/entry/src/main/ets/core/services/scene.ets",
+      "mirrorSha256": "14d28dc0b52187a13b63873ef8fddc7ccc968c31a02625eb83e523eedc5285c1",
+      "bytes": 2262
+    },
+    "core/src/services/scheduler.ts": {
+      "sha256": "014fc59740639fff8f50328e2850b2de9a75aa8086dcf0948ffe55130290939b",
+      "mirror": "harmony/entry/src/main/ets/core/services/scheduler.ets",
+      "mirrorSha256": "4e6c4224e907085fb0f0c5f8e1a92bab00cbdd09c86d8af93c9840166e931b2f",
+      "bytes": 7600
+    },
+    "core/src/services/scriptedAI.ts": {
+      "sha256": "b21deb8a9310e5a6d3ba38bbab8b42a8c606fda5a4787def312d099051a517be",
+      "mirror": "harmony/entry/src/main/ets/core/services/scriptedAI.ets",
+      "mirrorSha256": "b8cf860ac2e2ed3bc69f3a3f64fc8213ac1dd2b1a531cb6c723555b546dfd45d",
+      "bytes": 2197
+    },
+    "core/src/services/stats.ts": {
+      "sha256": "5cceeb7eaa0a387d1e4a982ade427187618c8274adb20540c1bd2710322127f3",
+      "mirror": "harmony/entry/src/main/ets/core/services/stats.ets",
+      "mirrorSha256": "4622efc63ebf01f1aec86c9bc293b3a0e7fac69ea3317a0bfc3e8fd5e312fb93",
+      "bytes": 8663
+    },
+    "core/src/services/wordbook.ts": {
+      "sha256": "f9762a8a7998c43ea470211fbab4e72560e12ac95e4ea7286eb384a8c355fbc2",
+      "mirror": "harmony/entry/src/main/ets/core/services/wordbook.ets",
+      "mirrorSha256": "9e498ded99e58dac8d4b8aa353563be9f42f61ee9151c2c72b81c28ca791ff63",
+      "bytes": 7101
+    },
+    "core/src/utils/collection.ts": {
+      "sha256": "c2cce52cda806a146e12906b3918cc583ced12403b42e32bb9b0d035520a854e",
+      "mirror": "harmony/entry/src/main/ets/core/utils/collection.ets",
+      "mirrorSha256": "b24792fe0d699f7016d1cec09d08827204177dd2e0232578d6cf8e187d8d5edc",
+      "bytes": 3540
+    },
+    "core/src/utils/date.ts": {
+      "sha256": "b7f0b749adfaa68a2656dd720ba04dffca4fa8d8fa666a519ec0f4bba57f4b4e",
+      "mirror": "harmony/entry/src/main/ets/core/utils/date.ets",
+      "mirrorSha256": "494c363c429ce4f3d78e4685802772fb3239d470645f69fe2c855d676ff2b8c9",
+      "bytes": 6600
+    },
+    "core/src/utils/id.ts": {
+      "sha256": "5a0b76abd048f5b6868865e3ecbee2322c2d17d76cc5ee0608247e8d94d1d6f7",
+      "mirror": "harmony/entry/src/main/ets/core/utils/id.ets",
+      "mirrorSha256": "663f1c0b984f89ab1967be118f9515b81ecc69c1b619b0f36bc4cd9e529a3964",
+      "bytes": 2295
+    }
+  }
+}
